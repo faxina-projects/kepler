@@ -1,0 +1,28 @@
+version: '3.5'
+services:
+  kepler-api:
+    container_name: kepler-api
+    build: .
+    ports:
+      - 3000:3000
+    networks:
+      - kepler-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: always
+  kepler_server:
+    container_name: kepler-server
+    image: 'nginx:1.21.3-alpine'
+    ports:
+      - 3005:80
+    networks:
+      - kepler-network
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - kepler-api
+networks:
+  kepler-network:
+    driver: bridge
